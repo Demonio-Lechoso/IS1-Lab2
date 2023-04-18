@@ -1,3 +1,4 @@
+from asyncio import PriorityQueue
 from collections import deque
 
 
@@ -72,6 +73,58 @@ class Graph:
                 if neighbor not in explored:
                     queue.append((neighbor, current_vertex))
                     
+        return None
+    
+    def greedy_search(self, start_vertex, goal_vertex, heuristic):
+        explored = set()
+        priorityQueue = PriorityQueue()
+        priorityQueue.put((heuristic[start_vertex], start_vertex))
+        parents = {start_vertex: None}
+
+        while not priorityQueue.empty():
+            _, current_vertex = priorityQueue.get()
+
+            if current_vertex in explored:
+                continue
+
+            explored.add(current_vertex)
+
+            if current_vertex == goal_vertex:
+                return self.construct_path(start_vertex, goal_vertex, parents)
+
+            for neighbor in self.vertices[current_vertex]:
+                if neighbor not in explored:
+                    parents[neighbor] = current_vertex
+                    priorityQueue.put((heuristic[neighbor], neighbor))
+
+        return None
+    
+    def a_star_search(self, start_vertex, goal_vertex):
+        explored = set()
+        priorityQueue = PriorityQueue()
+        priorityQueue.put((0, start_vertex))
+        g_scores = {start_vertex: 0}
+        parents = {start_vertex: None}
+
+        while not priorityQueue.empty():
+            current_vertex = priorityQueue.get()[1]
+
+            if current_vertex == goal_vertex:
+                return self.construct_path(start_vertex, goal_vertex, parents)
+            
+            explored.add(current_vertex)
+
+            for neighbor in self.vertices[current_vertex]:
+                if neighbor in explored:
+                    continue
+
+                tentative_g_score = g_scores[current_vertex] + self.vertices[current_vertex][neighbor]
+                if neighbor not in g_scores or tentative_g_score < g_scores[neighbor]:
+                    parents[neighbor] = current_vertex
+                    g_scores[neighbor] = tentative_g_score
+                    f_score = tentative_g_score + self.heuristics[neighbor]
+                    priorityQueue.put((f_score, neighbor))
+        
         return None
     
     def construct_path(self, start_vertex, goal_vertex, parents):
