@@ -1,4 +1,4 @@
-from asyncio import PriorityQueue
+from PriorityQueue import PriorityQueue
 from collections import deque
 
 
@@ -36,6 +36,7 @@ class Graph:
     def dfs(self, start_vertex, goal_vertex):
         explored = set()
         stack = [(start_vertex, None)]
+        parents = {start_vertex: None}
 
         while stack:
             current_vertex, parent_vertex = stack.pop()
@@ -46,10 +47,11 @@ class Graph:
             explored.add(current_vertex)
 
             if current_vertex == goal_vertex:
-                return self.construct_path(start_vertex, goal_vertex, {start_vertex: None, goal_vertex: parent_vertex})
+                return self.construct_path(start_vertex, goal_vertex, parents)
             
             for neighbor in self.vertices[current_vertex]:
                 if neighbor not in explored:
+                    parents[neighbor] = current_vertex
                     stack.append((neighbor, current_vertex))
 
         return None
@@ -57,6 +59,7 @@ class Graph:
     def bfs(self, start_vertex, goal_vertex):
         explored = set()
         queue = deque([(start_vertex, None)])
+        parents = {start_vertex: None}
 
         while queue:
             current_vertex, parent_vertex = queue.popleft()
@@ -67,10 +70,11 @@ class Graph:
             explored.add(current_vertex)
 
             if current_vertex == goal_vertex:
-                return self.construct_path(start_vertex, goal_vertex, {start_vertex: None, goal_vertex: parent_vertex})
+                return self.construct_path(start_vertex, goal_vertex, parents)
             
             for neighbor in self.vertices[current_vertex]:
                 if neighbor not in explored:
+                    parents[neighbor] = current_vertex
                     queue.append((neighbor, current_vertex))
                     
         return None
@@ -80,8 +84,10 @@ class Graph:
         priorityQueue = PriorityQueue()
         priorityQueue.put((heuristic[start_vertex], start_vertex))
         parents = {start_vertex: None}
-
+        i = 0
         while not priorityQueue.empty():
+            print(i)
+            i+=1
             _, current_vertex = priorityQueue.get()
 
             if current_vertex in explored:
@@ -99,7 +105,7 @@ class Graph:
 
         return None
     
-    def a_star_search(self, start_vertex, goal_vertex):
+    def a_star_search(self, start_vertex, goal_vertex, heuristic):
         explored = set()
         priorityQueue = PriorityQueue()
         priorityQueue.put((0, start_vertex))
@@ -122,12 +128,13 @@ class Graph:
                 if neighbor not in g_scores or tentative_g_score < g_scores[neighbor]:
                     parents[neighbor] = current_vertex
                     g_scores[neighbor] = tentative_g_score
-                    f_score = tentative_g_score + self.heuristics[neighbor]
+                    f_score = tentative_g_score + heuristic[neighbor]
                     priorityQueue.put((f_score, neighbor))
         
         return None
     
     def construct_path(self, start_vertex, goal_vertex, parents):
+        print(parents)
         path = []
         current_vertex = goal_vertex
         while current_vertex != start_vertex:
@@ -136,3 +143,102 @@ class Graph:
         path.append(start_vertex)
         path.reverse()
         return path
+    
+def test_dfs():    
+    graph = Graph()
+    graph.add_vertex("A")
+    graph.add_vertex("B")
+    graph.add_vertex("C")
+    graph.add_vertex("D")
+    graph.add_vertex("E")
+    graph.add_vertex("F")
+    graph.add_edge("A", "B", 1)
+    graph.add_edge("A", "C", 1)
+    graph.add_edge("B", "D", 1)
+    graph.add_edge("C", "E", 1)
+    graph.add_edge("D", "F", 1)
+    graph.add_edge("E", "F", 1)
+
+    path = graph.dfs("A", "F")
+    print(path)
+    assert path == ["A", "B", "D", "F"]
+
+def test_bfs():
+    graph = Graph()
+    graph.add_vertex("A")
+    graph.add_vertex("B")
+    graph.add_vertex("C")
+    graph.add_vertex("D")
+    graph.add_vertex("E")
+    graph.add_vertex("F")
+    graph.add_edge("A", "B", 1)
+    graph.add_edge("A", "C", 1)
+    graph.add_edge("B", "D", 1)
+    graph.add_edge("C", "E", 1)
+    graph.add_edge("D", "F", 1)
+    graph.add_edge("E", "F", 1)
+
+    path = graph.bfs("A", "F")
+    print(path)
+    assert path == ["A", "C", "E", "F"]
+
+def test_greedy_search():
+    graph = Graph()
+    graph.add_vertex("A")
+    graph.add_vertex("B")
+    graph.add_vertex("C")
+    graph.add_vertex("D")
+    graph.add_vertex("E")
+    graph.add_vertex("F")
+    graph.add_edge("A", "B", 1)
+    graph.add_edge("A", "C", 1)
+    graph.add_edge("B", "D", 1)
+    graph.add_edge("C", "E", 5)
+    graph.add_edge("D", "F", 1)
+    graph.add_edge("E", "F", 1)
+
+    heuristics = {
+        "A": 3,
+        "B": 2,
+        "C": 6,
+        "D": 1,
+        "E": 1,
+        "F": 0
+    }
+
+    path = graph.greedy_search("A", "F", heuristics)
+    print(path)
+    assert path == ["A", "B", "D", "F"]
+
+def test_a_star():
+    graph = Graph()
+    graph.add_vertex("A")
+    graph.add_vertex("B")
+    graph.add_vertex("C")
+    graph.add_vertex("D")
+    graph.add_vertex("E")
+    graph.add_vertex("F")
+    graph.add_edge("A", "B", 1)
+    graph.add_edge("A", "C", 1)
+    graph.add_edge("B", "D", 1)
+    graph.add_edge("C", "E", 5)
+    graph.add_edge("D", "F", 1)
+    graph.add_edge("E", "F", 1)
+
+    heuristics = {
+        "A": 3,
+        "B": 2,
+        "C": 6,
+        "D": 1,
+        "E": 1,
+        "F": 0
+    }
+
+    path = graph.a_star_search("A", "F", heuristics)
+    print(path)
+    assert path == ["A", "B", "D", "F"]
+
+#test_dfs()
+#test_bfs()
+#test_greedy_search()
+test_a_star()
