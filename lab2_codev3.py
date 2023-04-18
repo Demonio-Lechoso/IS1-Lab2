@@ -7,8 +7,8 @@ grid = [    [0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0]
 ]
 
-0: Free cell
-1: Blocked cell (obstacle)
+#0: Free cell
+#1: Blocked cell (obstacle)
 
 # help functions
 # We need some helper functions to get the neighbors of a cell, 
@@ -37,7 +37,7 @@ def reconstruct_path(came_from, start, goal):
     path = [goal]
     current = goal
     while current != start:
-        current = came_from[current]
+        current = came_from[current][0]
         path.append(current)
     return path[::-1]
 
@@ -86,6 +86,7 @@ import heapq
 
 def a_star(grid, start, goal):
     open_set = [(manhattan_distance(start, goal), start, 0)]
+    # came_from dict stores both the predecessor node and the tentative cost
     came_from = dict()
 
     while open_set:
@@ -95,16 +96,17 @@ def a_star(grid, start, goal):
 
         for neighbor in neighbors(grid, current):
             tentative_g = g + 1
-            if neighbor not in came_from or tentative_g < came_from[neighbor]:
+            if neighbor not in came_from or tentative_g < came_from[neighbor][1]:
                 heapq.heappush(open_set, (tentative_g + manhattan_distance(neighbor, goal), neighbor, tentative_g))
-                came_from[neighbor] = current
+                came_from[neighbor] = (current, tentative_g)
 
     return None
 
-# Greedy Search
+# greedy search
 def greedy(grid, start, goal):
     zero_cost_heuristic = {(i, j): 0 for i in range(len(grid)) for j in range(len(grid[0]))}
-    return a_star(grid, start, goal, zero_cost_heuristic)
+    return a_star(grid, start, goal)
+
 
 
 start, goal = (0, 0), (4, 4)
