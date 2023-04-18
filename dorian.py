@@ -35,11 +35,12 @@ class Graph:
 
     def dfs(self, start_vertex, goal_vertex):
         explored = set()
-        stack = [(start_vertex, None)]
+        stack = [start_vertex]
         parents = {start_vertex: None}
 
         while stack:
-            current_vertex, parent_vertex = stack.pop()
+            current_vertex = stack.pop()
+            print(current_vertex)
 
             if current_vertex in explored:
                 continue
@@ -52,17 +53,18 @@ class Graph:
             for neighbor in self.vertices[current_vertex]:
                 if neighbor not in explored:
                     parents[neighbor] = current_vertex
-                    stack.append((neighbor, current_vertex))
+                    stack.append(neighbor)
 
         return None
     
     def bfs(self, start_vertex, goal_vertex):
         explored = set()
-        queue = deque([(start_vertex, None)])
+        queue = deque([start_vertex])
         parents = {start_vertex: None}
 
         while queue:
-            current_vertex, parent_vertex = queue.popleft()
+            current_vertex = queue.popleft()
+            print(current_vertex)
 
             if current_vertex in explored:
                 continue
@@ -75,21 +77,18 @@ class Graph:
             for neighbor in self.vertices[current_vertex]:
                 if neighbor not in explored:
                     parents[neighbor] = current_vertex
-                    queue.append((neighbor, current_vertex))
+                    queue.append(neighbor)
                     
         return None
-    
+
     def greedy_search(self, start_vertex, goal_vertex, heuristic):
         explored = set()
         priorityQueue = PriorityQueue()
         priorityQueue.put((heuristic[start_vertex], start_vertex))
         parents = {start_vertex: None}
-        i = 0
         while not priorityQueue.empty():
-            print(i)
-            i+=1
-            _, current_vertex = priorityQueue.get()
-
+            current_vertex = priorityQueue.get()[1]
+            print(current_vertex)
             if current_vertex in explored:
                 continue
 
@@ -104,7 +103,7 @@ class Graph:
                     priorityQueue.put((heuristic[neighbor], neighbor))
 
         return None
-    
+
     def a_star_search(self, start_vertex, goal_vertex, heuristic):
         explored = set()
         priorityQueue = PriorityQueue()
@@ -157,7 +156,7 @@ def test_dfs():
     graph.add_edge("B", "D", 1)
     graph.add_edge("C", "E", 1)
     graph.add_edge("D", "F", 1)
-    graph.add_edge("E", "F", 1)
+    #graph.add_edge("E", "F", 1)
 
     path = graph.dfs("A", "F")
     print(path)
@@ -239,6 +238,6 @@ def test_a_star():
     assert path == ["A", "B", "D", "F"]
 
 #test_dfs()
-#test_bfs()
+test_bfs()
 #test_greedy_search()
-test_a_star()
+#test_a_star()
