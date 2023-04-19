@@ -116,7 +116,7 @@ class Graph:
 
             if current_vertex == goal_vertex:
                 return self.construct_path(start_vertex, goal_vertex, parents)
-            
+
             explored.add(current_vertex)
 
             for neighbor in self.vertices[current_vertex]:
@@ -128,12 +128,14 @@ class Graph:
                     parents[neighbor] = current_vertex
                     g_scores[neighbor] = tentative_g_score
                     f_score = tentative_g_score + heuristic[neighbor]
+                    print("current:", current_vertex)
+                    print(neighbor, f_score)
                     priorityQueue.put((f_score, neighbor))
-        
+
         return None
-    
+
     def construct_path(self, start_vertex, goal_vertex, parents):
-        print(parents)
+        #print(parents)
         path = []
         current_vertex = goal_vertex
         while current_vertex != start_vertex:
@@ -142,102 +144,78 @@ class Graph:
         path.append(start_vertex)
         path.reverse()
         return path
-    
-def test_dfs():    
+
+def luxembourg_railway():
     graph = Graph()
-    graph.add_vertex("A")
-    graph.add_vertex("B")
-    graph.add_vertex("C")
-    graph.add_vertex("D")
-    graph.add_vertex("E")
-    graph.add_vertex("F")
-    graph.add_edge("A", "B", 1)
-    graph.add_edge("A", "C", 1)
-    graph.add_edge("B", "D", 1)
-    graph.add_edge("C", "E", 1)
-    graph.add_edge("D", "F", 1)
-    #graph.add_edge("E", "F", 1)
 
-    path = graph.dfs("A", "F")
-    print(path)
-    assert path == ["A", "B", "D", "F"]
+    cities = [
+        "Luxembourg", "Ettelbruck", "Diekirch", "Wasserbillig", "Differdange", "Esch-sur-Alzette",
+        "Rodange", "Pétange", "Schifflange", "Bettembourg", "Mersch", "Troisvierges"
+    ]
 
-def test_bfs():
-    graph = Graph()
-    graph.add_vertex("A")
-    graph.add_vertex("B")
-    graph.add_vertex("C")
-    graph.add_vertex("D")
-    graph.add_vertex("E")
-    graph.add_vertex("F")
-    graph.add_edge("A", "B", 1)
-    graph.add_edge("A", "C", 1)
-    graph.add_edge("B", "D", 1)
-    graph.add_edge("C", "E", 1)
-    graph.add_edge("D", "F", 1)
-    graph.add_edge("E", "F", 1)
+    for city in cities:
+        graph.add_vertex(city)
 
-    path = graph.bfs("A", "F")
-    print(path)
-    assert path == ["A", "C", "E", "F"]
+    connections = [
+        ("Luxembourg", "Ettelbruck", 37),
+        ("Luxembourg", "Wasserbillig", 34),
+        ("Luxembourg", "Bettembourg", 17),
+        ("Ettelbruck", "Diekirch", 10),
+        ("Ettelbruck", "Mersch", 24),
+        ("Mersch", "Luxembourg", 19),
+        ("Wasserbillig", "Diekirch", 35),
+        ("Wasserbillig", "Bettembourg", 31),
+        ("Diekirch", "Troisvierges", 46),
+        ("Bettembourg", "Esch-sur-Alzette", 13),
+        ("Esch-sur-Alzette", "Schifflange", 4),
+        ("Esch-sur-Alzette", "Differdange", 16),
+        ("Esch-sur-Alzette", "Pétange", 17),
+        ("Pétange", "Rodange", 4),
+        ("Differdange", "Rodange", 12),
+        ("Differdange", "Pétange", 13),
+        ("Schifflange", "Bettembourg", 11),
+    ]
 
-def test_greedy_search():
-    graph = Graph()
-    graph.add_vertex("A")
-    graph.add_vertex("B")
-    graph.add_vertex("C")
-    graph.add_vertex("D")
-    graph.add_vertex("E")
-    graph.add_vertex("F")
-    graph.add_edge("A", "B", 1)
-    graph.add_edge("A", "C", 1)
-    graph.add_edge("B", "D", 1)
-    graph.add_edge("C", "E", 5)
-    graph.add_edge("D", "F", 1)
-    graph.add_edge("E", "F", 1)
+    for connection in connections:
+        graph.add_edge(connection[0], connection[1], connection[2])
 
     heuristics = {
-        "A": 3,
-        "B": 2,
-        "C": 6,
-        "D": 1,
-        "E": 1,
-        "F": 0
+        "Luxembourg": 93,
+        "Ettelbruck": 56,
+        "Diekirch": 46,
+        "Wasserbillig": 81,
+        "Differdange": 141,
+        "Esch-sur-Alzette": 125,
+        "Rodange": 146,
+        "Pétange": 142,
+        "Schifflange": 123,
+        "Bettembourg": 112,
+        "Mersch": 80,
+        "Troisvierges": 0,
     }
 
-    path = graph.greedy_search("A", "F", heuristics)
-    print(path)
-    assert path == ["A", "B", "D", "F"]
+    return graph, heuristics
 
-def test_a_star():
-    graph = Graph()
-    graph.add_vertex("A")
-    graph.add_vertex("B")
-    graph.add_vertex("C")
-    graph.add_vertex("D")
-    graph.add_vertex("E")
-    graph.add_vertex("F")
-    graph.add_edge("A", "B", 1)
-    graph.add_edge("A", "C", 1)
-    graph.add_edge("B", "D", 1)
-    graph.add_edge("C", "E", 5)
-    graph.add_edge("D", "F", 1)
-    graph.add_edge("E", "F", 1)
+def test_luxembourg_railway():
+    graph, heuristics = luxembourg_railway()
+    start_station = "Esch-sur-Alzette"
+    goal_station = "Troisvierges"
+    print("\nLuxembourg Railway Test")
+    print("\nDFS:")
+    path_dfs = graph.dfs(start_station, "Troisvierges")
+    print("Path: ", path_dfs)
 
-    heuristics = {
-        "A": 3,
-        "B": 2,
-        "C": 6,
-        "D": 1,
-        "E": 1,
-        "F": 0
-    }
+    print("\nBFS:")
+    path_bfs = graph.bfs(start_station, "Troisvierges")
+    print("Path: ", path_bfs)
 
-    path = graph.a_star_search("A", "F", heuristics)
-    print(path)
-    assert path == ["A", "B", "D", "F"]
+    print("\nGreedy Search:")
+    path_greedy = graph.greedy_search(start_station, "Troisvierges", heuristics)
+    print("Path: ", path_greedy)
 
-#test_dfs()
-test_bfs()
-#test_greedy_search()
-#test_a_star()
+    print("\nA* Search:")
+    path_a_star = graph.a_star_search(start_station, "Troisvierges", heuristics)
+    print("Path: ", path_a_star)
+
+
+test_luxembourg_railway()
