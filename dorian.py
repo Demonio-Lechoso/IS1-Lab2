@@ -63,7 +63,6 @@ class Graph:
 
         while queue:
             current_vertex = queue.popleft()
-
             if current_vertex in explored:
                 continue
 
@@ -133,13 +132,16 @@ class Graph:
 
     def construct_path(self, start_vertex, goal_vertex, parents):
         path = []
+        total_cost = 0
         current_vertex = goal_vertex
         while current_vertex != start_vertex:
             path.append(current_vertex)
-            current_vertex = parents[current_vertex]
+            parent_vertex = parents[current_vertex]
+            total_cost+= self.vertices[current_vertex][parent_vertex]
+            current_vertex = parent_vertex
         path.append(start_vertex)
         path.reverse()
-        return path
+        return path, total_cost
 
 def luxembourg_railway():
     graph = Graph()
@@ -192,26 +194,82 @@ def luxembourg_railway():
 
     return graph, heuristics
 
-def test_luxembourg_railway():
+def test1_luxembourg_railway():
     graph, heuristics = luxembourg_railway()
     start_station = "Esch-sur-Alzette"
-    goal_station = "Troisvierges"
-    print("\nLuxembourg Railway Test")
+
+    print("\nLuxembourg Railway Test\nEsch-sur-Alzette to Troisvierges")
     print("\nDFS:")
-    path_dfs = graph.dfs(start_station, "Troisvierges")
+    path_dfs, total_cost = graph.dfs(start_station, "Troisvierges")
     print("Path: ", path_dfs)
+    print("Total cost:", total_cost)
 
     print("\nBFS:")
-    path_bfs = graph.bfs(start_station, "Troisvierges")
+    path_bfs, total_cost = graph.bfs(start_station, "Troisvierges")
     print("Path: ", path_bfs)
+    print("Total cost:", total_cost)
 
     print("\nGreedy Search:")
-    path_greedy = graph.greedy_search(start_station, "Troisvierges", heuristics)
+    path_greedy, total_cost = graph.greedy_search(start_station, "Troisvierges", heuristics)
     print("Path: ", path_greedy)
+    print("Total cost:", total_cost)
 
     print("\nA* Search:")
-    path_a_star = graph.a_star_search(start_station, "Troisvierges", heuristics)
+    path_a_star, total_cost = graph.a_star_search(start_station, "Troisvierges", heuristics)
     print("Path: ", path_a_star)
+    print("Total cost:", total_cost)
+
+def test2_luxembourg_railway():
+    graph, heuristics = luxembourg_railway()
+    start_station = "Luxembourg"
+
+    print("\nLuxembourg Railway Test 2\nLuxembourg to Troisvierges")
+    print("\nDFS:")
+    path_dfs, total_cost = graph.dfs(start_station, "Troisvierges")
+    print("Path: ", path_dfs)
+    print("Total cost:", total_cost)
+
+    print("\nBFS:")
+    path_bfs, total_cost = graph.bfs(start_station, "Troisvierges")
+    print("Path: ", path_bfs)
+    print("Total cost:", total_cost)
+
+    print("\nGreedy Search:")
+    path_greedy, total_cost = graph.greedy_search(start_station, "Troisvierges", heuristics)
+    print("Path: ", path_greedy)
+    print("Total cost:", total_cost)
+
+    print("\nA* Search:")
+    path_a_star, total_cost = graph.a_star_search(start_station, "Troisvierges", heuristics)
+    print("Path: ", path_a_star)
+    print("Total cost:", total_cost)
+
+def test3_luxembourg_railway():
+    graph, heuristics = luxembourg_railway()
+    start_station = "Bettembourg"
+
+    print("\nLuxembourg Railway Test 2\nBettembourg to Troisvierges")
+    print("\nDFS:")
+    path_dfs, total_cost = graph.dfs(start_station, "Troisvierges")
+    print("Path: ", path_dfs)
+    print("Total cost:", total_cost)
+
+    print("\nBFS:")
+    path_bfs, total_cost = graph.bfs(start_station, "Troisvierges")
+    print("Path: ", path_bfs)
+    print("Total cost:", total_cost)
+
+    print("\nGreedy Search:")
+    path_greedy, total_cost = graph.greedy_search(start_station, "Troisvierges", heuristics)
+    print("Path: ", path_greedy)
+    print("Total cost:", total_cost)
+
+    print("\nA* Search:")
+    path_a_star, total_cost = graph.a_star_search(start_station, "Troisvierges", heuristics)
+    print("Path: ", path_a_star)
+    print("Total cost:", total_cost)
 
 
-test_luxembourg_railway()
+test1_luxembourg_railway()
+test2_luxembourg_railway()
+test3_luxembourg_railway()
