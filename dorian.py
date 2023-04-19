@@ -40,7 +40,6 @@ class Graph:
 
         while stack:
             current_vertex = stack.pop()
-            print(current_vertex)
 
             if current_vertex in explored:
                 continue
@@ -64,7 +63,6 @@ class Graph:
 
         while queue:
             current_vertex = queue.popleft()
-            print(current_vertex)
 
             if current_vertex in explored:
                 continue
@@ -88,7 +86,7 @@ class Graph:
         parents = {start_vertex: None}
         while not priorityQueue.empty():
             current_vertex = priorityQueue.get()[1]
-            print(current_vertex)
+
             if current_vertex in explored:
                 continue
 
@@ -124,18 +122,16 @@ class Graph:
                     continue
 
                 tentative_g_score = g_scores[current_vertex] + self.vertices[current_vertex][neighbor]
+
                 if neighbor not in g_scores or tentative_g_score < g_scores[neighbor]:
                     parents[neighbor] = current_vertex
                     g_scores[neighbor] = tentative_g_score
                     f_score = tentative_g_score + heuristic[neighbor]
-                    print("current:", current_vertex)
-                    print(neighbor, f_score)
                     priorityQueue.put((f_score, neighbor))
 
         return None
 
     def construct_path(self, start_vertex, goal_vertex, parents):
-        #print(parents)
         path = []
         current_vertex = goal_vertex
         while current_vertex != start_vertex:
