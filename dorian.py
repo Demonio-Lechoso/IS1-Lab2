@@ -37,9 +37,12 @@ class Graph:
         explored = set()
         stack = [start_vertex]
         parents = {start_vertex: None}
-
+        i = 0
         while stack:
             current_vertex = stack.pop()
+
+            i+=1
+            print(i, ": ", current_vertex)
 
             if current_vertex in explored:
                 continue
@@ -60,9 +63,13 @@ class Graph:
         explored = set()
         queue = deque([start_vertex])
         parents = {start_vertex: None}
-
+        i = 0
         while queue:
             current_vertex = queue.popleft()
+
+            i+=1
+            print(i, ": ", current_vertex)
+
             if current_vertex in explored:
                 continue
 
@@ -83,8 +90,13 @@ class Graph:
         priorityQueue = PriorityQueue()
         priorityQueue.put((heuristic[start_vertex], start_vertex))
         parents = {start_vertex: None}
+        i = 0
+
         while not priorityQueue.empty():
             current_vertex = priorityQueue.get()[1]
+
+            i+=1
+            print(i, ": ", current_vertex)
 
             if current_vertex in explored:
                 continue
@@ -107,9 +119,13 @@ class Graph:
         priorityQueue.put((0, start_vertex))
         g_scores = {start_vertex: 0}
         parents = {start_vertex: None}
+        i = 0
 
         while not priorityQueue.empty():
             current_vertex = priorityQueue.get()[1]
+
+            i+=1
+            print(i, ": ", current_vertex)
 
             if current_vertex == goal_vertex:
                 return self.construct_path(start_vertex, goal_vertex, parents)
