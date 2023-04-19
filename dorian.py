@@ -248,7 +248,7 @@ def test3_luxembourg_railway():
     graph, heuristics = luxembourg_railway()
     start_station = "Bettembourg"
 
-    print("\nLuxembourg Railway Test 2\nBettembourg to Troisvierges")
+    print("\nLuxembourg Railway Test 3\nBettembourg to Troisvierges")
     print("\nDFS:")
     path_dfs, total_cost = graph.dfs(start_station, "Troisvierges")
     print("Path: ", path_dfs)
