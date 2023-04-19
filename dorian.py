@@ -175,7 +175,7 @@ def test_bfs():
     graph.add_edge("B", "D", 1)
     graph.add_edge("C", "E", 1)
     graph.add_edge("D", "F", 1)
-    graph.add_edge("E", "F", 1)
+    graph.add_edge("E", "X", 1)
 
     path = graph.bfs("A", "F")
     print(path)
@@ -237,7 +237,89 @@ def test_a_star():
     print(path)
     assert path == ["A", "B", "D", "F"]
 
+
+def luxembourg_railway():
+    graph = Graph()
+    
+    cities = [
+        "Luxembourg", "Ettelbruck", "Diekirch", "Wasserbillig", "Differdange", "Esch-sur-Alzette",
+        "Rodange", "Pétange", "Schifflange", "Bettembourg", "Mersch", "Troisvierges"
+    ]
+    
+    for city in cities:
+        graph.add_vertex(city)
+    
+    connections = [
+        ("Luxembourg", "Ettelbruck", 37),
+        ("Luxembourg", "Wasserbillig", 34),
+        ("Luxembourg", "Bettembourg", 17),
+        ("Ettelbruck", "Diekirch", 10),
+        ("Ettelbruck", "Mersch", 24),
+        ("Mersch", "Luxembourg", 19),
+        ("Wasserbillig", "Diekirch", 35),
+        ("Wasserbillig", "Bettembourg", 31),
+        ("Diekirch", "Troisvierges", 46),
+        ("Bettembourg", "Esch-sur-Alzette", 13),
+        ("Esch-sur-Alzette", "Schifflange", 4),
+        ("Esch-sur-Alzette", "Differdange", 16),
+        ("Esch-sur-Alzette", "Pétange", 17),
+        ("Pétange", "Rodange", 4),
+        ("Differdange", "Rodange", 12),
+        ("Differdange", "Pétange", 13),
+        ("Schifflange", "Bettembourg", 11),
+    ]
+    
+    for connection in connections:
+        graph.add_edge(connection[0], connection[1], connection[2])
+    
+    heuristics = {
+        "Luxembourg": 0,
+        "Ettelbruck": 15,
+        "Diekirch": 30,
+        "Wasserbillig": 20,
+        "Differdange": 30,
+        "Esch-sur-Alzette": 20,
+        "Rodange": 40,
+        "Pétange": 35,
+        "Schifflange": 15,
+        "Bettembourg": 10,
+        "Mersch": 10,
+        "Troisvierges": 60,
+    }
+    
+    return graph, heuristics
+
+def test_luxembourg_railway():
+    graph, heuristics = luxembourg_railway()
+    print("\nLuxembourg Railway Test")
+    print("\nDFS:")
+    path_dfs = graph.dfs("Luxembourg", "Troisvierges")
+    print("Path: ", path_dfs)
+    print("\nBFS:")
+    path_bfs = graph.bfs("Luxembourg", "Troisvierges")
+    print("Path: ", path_bfs)
+    print("\nGreedy Search:")
+    path_greedy = graph.greedy_search("Luxembourg", "Troisvierges", heuristics)
+    print("Path: ", path_greedy)
+    print("\nA* Search:")
+    path_a_star = graph.a_star_search("Luxembourg", "Troisvierges", heuristics)
+    print("Path: ", path_a_star)
+
+
+
+
+
+
+test_luxembourg_railway()
+
+
+
+
+#print("DFS TEST -----------------------------------------------")
 #test_dfs()
-test_bfs()
+#print("BFS TEST -----------------------------------------------")
+#test_bfs()
+#print("GREEDY SEARCH TEST -----------------------------------------------")
 #test_greedy_search()
+#print("A-STAR TEST -----------------------------------------------")
 #test_a_star()
