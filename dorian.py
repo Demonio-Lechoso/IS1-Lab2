@@ -56,6 +56,7 @@ class Graph:
                 if neighbor not in explored:
                     parents[neighbor] = current_vertex
                     stack.append(neighbor)
+            print(stack)
 
         return None
     
@@ -82,7 +83,8 @@ class Graph:
                 if neighbor not in explored:
                     parents[neighbor] = current_vertex
                     queue.append(neighbor)
-                    
+            print(queue)
+
         return None
 
     def greedy_search(self, start_vertex, goal_vertex, heuristic):
@@ -110,7 +112,7 @@ class Graph:
                 if neighbor not in explored:
                     parents[neighbor] = current_vertex
                     priorityQueue.put((heuristic[neighbor], neighbor))
-
+            print(priorityQueue)
         return None
 
     def a_star_search(self, start_vertex, goal_vertex, heuristic):
@@ -143,7 +145,7 @@ class Graph:
                     g_scores[neighbor] = tentative_g_score
                     f_score = tentative_g_score + heuristic[neighbor]
                     priorityQueue.put((f_score, neighbor))
-
+            print(priorityQueue)
         return None
 
     def construct_path(self, start_vertex, goal_vertex, parents):
